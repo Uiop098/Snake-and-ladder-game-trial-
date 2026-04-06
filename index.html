@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <title>🎲 Snakes & Ladders</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+<div id="app">
+
+  <!-- ============================================================
+       SETUP SCREEN
+  ============================================================ -->
+  <div id="setup-screen">
+    <div class="setup-card">
+
+      <div class="setup-logo">
+        <h1>🐍 Snakes & Ladders 🪜</h1>
+        <p>Classic board game — race to square 100!</p>
+      </div>
+
+      <!-- Theme -->
+      <div class="setup-section">
+        <h3>🎨 Theme</h3>
+        <div class="theme-grid">
+          <button class="theme-btn active" data-theme="default" title="Default"></button>
+          <button class="theme-btn" data-theme="jungle"  title="Jungle"></button>
+          <button class="theme-btn" data-theme="candy"   title="Candy"></button>
+          <button class="theme-btn" data-theme="ocean"   title="Ocean"></button>
+          <button class="theme-btn" data-theme="fire"    title="Fire"></button>
+          <button class="theme-btn" data-theme="ice"     title="Ice"></button>
+        </div>
+      </div>
+
+      <!-- Players count -->
+      <div class="setup-section">
+        <h3>👥 Number of Players</h3>
+        <div class="count-row">
+          <button class="count-btn active" data-count="2">2</button>
+          <button class="count-btn" data-count="3">3</button>
+          <button class="count-btn" data-count="4">4</button>
+        </div>
+      </div>
+
+      <!-- Player customisation -->
+      <div class="setup-section">
+        <h3>✏️ Customise Players</h3>
+        <div id="players-setup">
+          <!-- rendered by JS -->
+        </div>
+      </div>
+
+      <button class="btn-start" id="btn-start">🎲 Start Game</button>
+    </div>
+  </div>
+
+
+  <!-- ============================================================
+       GAME SCREEN
+  ============================================================ -->
+  <div id="game-screen">
+
+    <!-- Top bar -->
+    <div class="game-topbar">
+      <button class="hamburger-btn" id="hamburger-btn" title="Settings" aria-label="Open settings menu">
+        <span></span><span></span><span></span>
+      </button>
+      <div class="game-title">🐍 Snakes &amp; Ladders 🪜</div>
+      <button class="hamburger-btn" id="fullscreen-quick" title="Fullscreen" onclick="document.fullscreenElement ? document.exitFullscreen() : document.documentElement.requestFullscreen()" style="font-size:1.1rem">⛶</button>
+    </div>
+
+    <!-- Main layout -->
+    <div class="game-layout">
+
+      <!-- Board -->
+      <div class="board-wrapper">
+        <div id="game-board"></div>
+      </div>
+
+      <!-- Side panel -->
+      <div class="side-panel">
+
+        <!-- Players -->
+        <div class="player-cards" id="player-cards">
+          <!-- rendered by JS -->
+        </div>
+
+        <!-- Dice -->
+        <div class="dice-area">
+          <div class="dice-wrapper" id="dice-wrapper">
+            <!-- rendered by JS -->
+          </div>
+          <button class="btn-roll" id="btn-roll">🎲 Roll</button>
+        </div>
+
+        <!-- Status -->
+        <div class="status-msg" id="status-msg">Get ready to play!</div>
+
+        <!-- Log -->
+        <div class="move-log">
+          <h4>📋 Move Log</h4>
+          <div id="move-log-list"></div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ============================================================
+       HAMBURGER SIDE MENU
+  ============================================================ -->
+  <div class="menu-overlay" id="menu-overlay"></div>
+  <div class="side-menu" id="side-menu" role="dialog" aria-label="Settings">
+
+    <div class="menu-header">
+      <h2>⚙️ Settings</h2>
+      <button class="menu-close" id="menu-close" aria-label="Close menu">✕</button>
+    </div>
+
+    <div class="menu-body">
+
+      <!-- Sound settings -->
+      <div class="menu-section">
+        <h3>🔊 Sound Effects</h3>
+        <div class="toggle-row">
+          <label>Sound On/Off</label>
+          <label class="toggle">
+            <input type="checkbox" id="toggle-sound" checked />
+            <span class="toggle-slider"></span>
+          </label>
+        </div>
+        <input class="menu-input" id="sound-url-input" type="url"
+          value="https://litter.catbox.moe/x208po.mp3"
+          placeholder="Sound effect URL..." />
+        <button class="btn-secondary" id="btn-test-sound">▶ Test Sound</button>
+      </div>
+
+      <!-- Haptic -->
+      <div class="menu-section">
+        <h3>📳 Haptic Feedback</h3>
+        <div class="toggle-row">
+          <label>Vibration On/Off</label>
+          <label class="toggle">
+            <input type="checkbox" id="toggle-haptic" checked />
+            <span class="toggle-slider"></span>
+          </label>
+        </div>
+      </div>
+
+      <!-- Background music -->
+      <div class="menu-section">
+        <h3>🎵 Background Music</h3>
+        <div class="toggle-row">
+          <label>Music On/Off</label>
+          <label class="toggle">
+            <input type="checkbox" id="toggle-bgmusic" />
+            <span class="toggle-slider"></span>
+          </label>
+        </div>
+
+        <label class="music-file-label" for="music-file-input">
+          🎵 <span id="music-file-label-text">Upload local music file…</span>
+          <input type="file" id="music-file-input" accept="audio/*" />
+        </label>
+
+        <div class="music-controls">
+          <button id="btn-music-stop">⏹ Stop</button>
+          <span style="font-size:0.8rem;color:var(--text2)">Vol</span>
+          <input class="music-vol" id="music-volume" type="range" min="0" max="1" step="0.05" value="0.4" />
+        </div>
+      </div>
+
+      <!-- Dice -->
+      <div class="menu-section">
+        <h3>🎲 Dice Count</h3>
+        <div class="count-row">
+          <button class="count-btn dice-count-btn active" data-count="1">1 Dice</button>
+          <button class="count-btn dice-count-btn" data-count="2">2 Dice</button>
+        </div>
+      </div>
+
+      <!-- Display -->
+      <div class="menu-section">
+        <h3>🖥 Display</h3>
+        <button class="btn-secondary" id="btn-fullscreen">⛶ Toggle Fullscreen</button>
+      </div>
+
+      <!-- Game controls -->
+      <div class="menu-section">
+        <h3>🎮 Game Controls</h3>
+        <button class="btn-secondary" id="btn-menu-restart">🔄 Restart Round</button>
+        <button class="btn-secondary" id="btn-menu-newgame" style="margin-top:8px">🏠 New Game Setup</button>
+      </div>
+
+    </div>
+  </div>
+
+</div><!-- /#app -->
+
+<script src="game.js"></script>
+</body>
+</html>
